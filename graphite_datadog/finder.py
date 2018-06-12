@@ -1,4 +1,6 @@
 import threading
+import datetime
+import time
 
 import datadog
 
@@ -74,7 +76,8 @@ class DataDogFinder(utils.BaseFinder):
           generator of Node
         """
         # TODO: with time.now() it returns 0, maybe try to use 'window' like the UI.
-        start_time = query.startTime or 0
+        start_time = query.startTime or time.mktime(datetime.datetime.utcnow().timetuple()) - 3600
+
         pattern = query.pattern
 
         # TODO: try to do some server-side filtering
@@ -90,12 +93,12 @@ class DataDogFinder(utils.BaseFinder):
         """Filter metrics and convert to nodes."""
 
         # From a metric list, infer directories.
-        # TODO: This is super inefficient!
+        # TODO: This is super super inefficient!
         directories = set()
         for metric in metrics:
-            idx = metric.rfind(".")
-            if idx:
-                directories.add(metric[0:idx])
+            components = metric.split(".")
+            for i in range(1, len(components)):
+                directories.add('.'.join(components[:i]))
 
         # Then filter everything accoring to the pattern.
         for directory in glob_utils.glob(directories, pattern):
