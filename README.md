@@ -4,6 +4,8 @@ Read :dog: Datadog metrics in :chart_with_upwards_trend: Graphite
 
 :warning: work in progress :warning:
 
+![screenshot](doc/example.jpeg)
+
 ## Installation
 
 ```bash
